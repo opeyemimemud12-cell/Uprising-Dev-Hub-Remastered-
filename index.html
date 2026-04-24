@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <!-- SEO + Social Preview -->
+  <meta name="description" content="Uprising DevHub — Discover, showcase and launch indie games from developers across the galaxy.">
+  <meta name="keywords" content="indie games, game showcase, game developer, upload games, indie dev hub">
+  <meta name="author" content="Uprising DevHub">
+  <meta name="theme-color" content="#00D4FF">
+
+  <!-- Open Graph (Facebook, WhatsApp, Discord, Google) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Uprising DevHub — Indie Game Universe">
+  <meta property="og:description" content="Discover, showcase and launch indie games from developers across the galaxy.">
+  <meta property="og:image" content="https://uprising-dev-hub-remastered.vercel.app/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://uprising-dev-hub-remastered.vercel.app">
+  <meta property="og:site_name" content="Uprising DevHub">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Uprising DevHub — Indie Game Universe">
+  <meta name="twitter:description" content="Discover, showcase and launch indie games from developers across the galaxy.">
+  <meta name="twitter:image" content="https://uprising-dev-hub-remastered.vercel.app/og-image.jpg">
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Uprising DevHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Rajdhani',sans-serif}
+
+    /* ── Stars ── */
+    #stars{position:fixed;inset:0;z-index:0}
+    .star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d,3s) infinite alternate}
+    @keyframes twinkle{from{opacity:var(--min,0.2)}to{opacity:var(--max,1)}}
+
+    /* ── Nebula bg ── */
+    #nebula{position:fixed;inset:0;z-index:1;
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 30%, rgba(120,40,200,0.25) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 80% 70%, rgba(0,100,255,0.2) 0%, transparent 70%),
+        radial-gradient(ellipse 80% 50% at 50% 50%, rgba(0,20,60,0.9) 0%, transparent 100%);
+    }
+
+    /* ── Planets ── */
+    .planet{position:fixed;border-radius:50%;z-index:2;animation:float var(--ft,8s) ease-in-out infinite alternate}
+    @keyframes float{0%{transform:translateY(0) rotate(0deg)}100%{transform:translateY(-18px) rotate(5deg)}}
+    #planet1{width:180px;height:180px;right:-30px;top:10%;
+      background:radial-gradient(circle at 35% 35%, #7b5ea7, #2d1b69);
+      box-shadow:0 0 60px rgba(123,94,167,0.4), inset -20px -20px 40px rgba(0,0,0,0.5);
+      --ft:10s}
+    #planet1::after{content:'';position:absolute;inset:-12px;border-radius:50%;border:3px solid rgba(200,160,255,0.15);transform:rotateX(75deg)}
+    #planet2{width:90px;height:90px;left:5%;bottom:20%;
+      background:radial-gradient(circle at 40% 35%, #4fc3f7, #0d47a1);
+      box-shadow:0 0 40px rgba(79,195,247,0.35), inset -10px -10px 20px rgba(0,0,0,0.4);
+      --ft:13s}
+
+    /* ── Main content ── */
+    #landing{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+
+    .logo-badge{font-family:'Orbitron',sans-serif;font-size:0.75rem;letter-spacing:0.3em;color:rgba(0,198,255,0.7);text-transform:uppercase;margin-bottom:16px;animation:fadeUp 1s ease 0.2s both}
+
+    h1{font-family:'Orbitron',sans-serif;font-size:clamp(2.2rem,6vw,4.5rem);font-weight:900;color:#fff;line-height:1.1;margin-bottom:12px;animation:fadeUp 1s ease 0.4s both;
+      text-shadow:0 0 40px rgba(0,198,255,0.5), 0 0 80px rgba(0,198,255,0.2)}
+    h1 span{
+      background:linear-gradient(90deg,#00C6FF,#00F5A0,#a855f7);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+    .tagline{font-size:clamp(1rem,2.5vw,1.3rem);color:rgba(255,255,255,0.6);margin-bottom:48px;letter-spacing:0.05em;animation:fadeUp 1s ease 0.6s both}
+
+    /* ── Dive In Button ── */
+    #diveBtn{
+      position:relative;
+      font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;
+      color:#fff;background:transparent;border:0;cursor:pointer;
+      padding:0;animation:fadeUp 1s ease 0.8s both;
+      outline:none;
+    }
+    .btn-ring{
+      position:relative;display:flex;align-items:center;justify-content:center;gap:12px;
+      padding:18px 44px;border-radius:60px;
+      background:linear-gradient(135deg,rgba(0,198,255,0.12),rgba(0,245,160,0.08));
+      border:1px solid rgba(0,198,255,0.4);
+      backdrop-filter:blur(10px);
+      box-shadow:0 0 30px rgba(0,198,255,0.15), inset 0 1px 0 rgba(255,255,255,0.1);
+      transition:all 0.3s ease;
+    }
+    #diveBtn:hover .btn-ring{
+      background:linear-gradient(135deg,rgba(0,198,255,0.22),rgba(0,245,160,0.15));
+      border-color:rgba(0,198,255,0.7);
+      box-shadow:0 0 50px rgba(0,198,255,0.3), 0 0 100px rgba(0,198,255,0.1), inset 0 1px 0 rgba(255,255,255,0.15);
+      transform:scale(1.04);
+    }
+    .btn-icon{font-size:1.4rem;transition:transform 0.3s ease}
+    #diveBtn:hover .btn-icon{transform:rotate(45deg) scale(1.2)}
+    .btn-pulse{
+      position:absolute;inset:-4px;border-radius:64px;
+      border:1px solid rgba(0,198,255,0.3);
+      animation:pulse-ring 2s ease infinite;
+    }
+    .btn-pulse2{animation-delay:1s}
+    @keyframes pulse-ring{0%{transform:scale(1);opacity:0.6}100%{transform:scale(1.15);opacity:0}}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ── Scroll hint ── */
+    .scroll-hint{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);z-index:10;display:flex;flex-direction:column;align-items:center;gap:6px;color:rgba(255,255,255,0.3);font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;animation:fadeUp 1s ease 1.2s both}
+    .scroll-chevron{width:20px;height:20px;border-right:1px solid rgba(255,255,255,0.25);border-bottom:1px solid rgba(255,255,255,0.25);transform:rotate(45deg);animation:bounce 1.5s ease infinite}
+    @keyframes bounce{0%,100%{transform:rotate(45deg) translateY(0)}50%{transform:rotate(45deg) translateY(5px)}}
+
+    /* ── LAUNCH SEQUENCE ── */
+    #launchOverlay{
+      position:fixed;inset:0;z-index:100;
+      pointer-events:none;
+      opacity:0;
+    }
+
+    /* rocket */
+    #rocket{
+      position:fixed;z-index:110;
+      left:50%;bottom:-120px;
+      transform:translateX(-50%);
+      width:60px;
+      transition:none;
+      filter:drop-shadow(0 0 20px rgba(0,198,255,0.8));
+    }
+
+    /* flame */
+    #flame{
+      position:fixed;z-index:109;
+      left:50%;bottom:-180px;
+      transform:translateX(-50%);
+      width:28px;
+      opacity:0;
+    }
+
+    /* space station */
+    #spaceStation{
+      position:fixed;inset:0;z-index:200;
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;pointer-events:none;
+      background:radial-gradient(ellipse at center, rgba(0,20,50,0.95) 0%, #000 100%);
+    }
+    #stationArt{
+      font-size:120px;
+      animation:stationSpin 20s linear infinite;
+      filter:drop-shadow(0 0 40px rgba(0,198,255,0.6));
+    }
+    @keyframes stationSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    #stationRing{
+      position:absolute;width:300px;height:300px;border-radius:50%;
+      border:2px solid rgba(0,198,255,0.3);
+      animation:ringPulse 2s ease infinite;
+    }
+    @keyframes ringPulse{0%,100%{box-shadow:0 0 20px rgba(0,198,255,0.2)}50%{box-shadow:0 0 60px rgba(0,198,255,0.5)}}
+    #dockText{
+      position:absolute;bottom:80px;
+      font-family:'Orbitron',sans-serif;color:rgba(0,198,255,0.8);
+      font-size:0.9rem;letter-spacing:0.2em;
+      opacity:0;animation:none;
+    }
+
+    /* transition wipe */
+    #wipe{
+      position:fixed;inset:0;z-index:300;
+      background:linear-gradient(135deg,#000 0%,#001030 50%,#000520 100%);
+      transform:translateY(100%);
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<div id="nebula"></div>
+<div class="planet" id="planet1"></div>
+<div class="planet" id="planet2"></div>
+
+<div id="landing">
+  <div class="logo-badge">— Indie Game Universe —</div>
+  <h1>Uprising<br><span>DevHub</span></h1>
+  <p class="tagline">Discover · Showcase · Launch</p>
+
+  <button id="diveBtn" onclick="beginLaunch()">
+    <div class="btn-pulse"></div>
+    <div class="btn-pulse btn-pulse2"></div>
+    <div class="btn-ring">
+      <span class="btn-icon">🚀</span>
+      <span>Let's Dive In</span>
+    </div>
+  </button>
+</div>
+
+<div class="scroll-hint">
+  <span>Enter the hub</span>
+  <div class="scroll-chevron"></div>
+</div>
+
+<!-- Rocket SVG -->
+<svg id="rocket" viewBox="0 0 60 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M30 5 C20 20 15 45 15 60 L30 68 L45 60 C45 45 40 20 30 5Z" fill="url(#rg1)"/>
+  <path d="M15 60 L5 80 L20 72Z" fill="#00C6FF" opacity="0.8"/>
+  <path d="M45 60 L55 80 L40 72Z" fill="#00C6FF" opacity="0.8"/>
+  <ellipse cx="30" cy="38" rx="7" ry="9" fill="rgba(0,220,255,0.3)" stroke="#00C6FF" stroke-width="1"/>
+  <circle cx="30" cy="68" r="5" fill="#00F5A0"/>
+  <defs>
+    <linearGradient id="rg1" x1="30" y1="5" x2="30" y2="68" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#e0e0ff"/>
+      <stop offset="100%" stop-color="#7090ff"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- Flame -->
+<svg id="flame" viewBox="0 0 28 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M14 0 C8 15 4 30 8 50 C11 58 17 58 20 50 C24 30 20 15 14 0Z" fill="url(#fg1)" opacity="0.9"/>
+  <path d="M14 0 C10 20 9 35 12 48 C13 54 16 54 17 48 C19 35 18 20 14 0Z" fill="url(#fg2)"/>
+  <defs>
+    <linearGradient id="fg1" x1="14" y1="0" x2="14" y2="60" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fff7a0"/>
+      <stop offset="40%" stop-color="#ff6a00"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </linearGradient>
+    <linearGradient id="fg2" x1="14" y1="0" x2="14" y2="60" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="60%" stop-color="#ffcc00"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- Space Station -->
+<div id="spaceStation">
+  <div id="stationRing"></div>
+  <div id="stationArt">🛸</div>
+  <div id="dockText">DOCKING IN PROGRESS...</div>
+</div>
+
+<!-- Wipe -->
+<div id="wipe"></div>
+
+<script>
+  // ── Generate stars ──
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  function drawStars(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(let i=0;i<220;i++){
+      const x = Math.random()*canvas.width;
+      const y = Math.random()*canvas.height;
+      const r = Math.random()*1.6+0.2;
+      const alpha = Math.random()*0.7+0.3;
+      ctx.beginPath();
+      ctx.arc(x,y,r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,255,255,${alpha})`;
+      ctx.fill();
+    }
+  }
+  drawStars();
+  window.addEventListener('resize', drawStars);
+
+  // Twinkling via CSS after draw
+  function addTwinkleStars(){
+    const container = document.createElement('div');
+    container.style.cssText='position:fixed;inset:0;z-index:0;pointer-events:none';
+    for(let i=0;i<80;i++){
+      const s = document.createElement('div');
+      const size = Math.random()*2+0.5;
+      s.className='star';
+      s.style.cssText=`
+        left:${Math.random()*100}%;top:${Math.random()*100}%;
+        width:${size}px;height:${size}px;
+        --d:${(Math.random()*3+1).toFixed(1)}s;
+        --min:${(Math.random()*0.1).toFixed(2)};
+        --max:${(Math.random()*0.5+0.5).toFixed(2)};
+        animation-delay:${(Math.random()*3).toFixed(1)}s
+      `;
+      container.appendChild(s);
+    }
+    document.body.appendChild(container);
+  }
+  addTwinkleStars();
+
+  // ── Launch Sequence ──
+  function beginLaunch(){
+    document.getElementById('diveBtn').style.pointerEvents='none';
+    const rocket = document.getElementById('rocket');
+    const flame = document.getElementById('flame');
+    const station = document.getElementById('spaceStation');
+    const dockText = document.getElementById('dockText');
+    const wipe = document.getElementById('wipe');
+
+    // Phase 1: Flame appears
+    flame.style.transition='opacity 0.3s';
+    flame.style.opacity='1';
+
+    // Rocket starts at center bottom
+    rocket.style.transition='none';
+    rocket.style.left='50%';
+    rocket.style.bottom='-120px';
+    rocket.style.transform='translateX(-50%)';
+    flame.style.left='50%';
+    flame.style.transform='translateX(-50%)';
+
+    // Phase 2: Liftoff
+    setTimeout(()=>{
+      rocket.style.transition='bottom 2.2s cubic-bezier(0.25,0.1,0.1,1), opacity 0.4s';
+      flame.style.transition='bottom 2.2s cubic-bezier(0.25,0.1,0.1,1), opacity 0.4s';
+      rocket.style.bottom='130vh';
+      flame.style.bottom='125vh';
+
+      // Fade out landing content
+      document.getElementById('landing').style.transition='opacity 0.8s';
+      document.getElementById('landing').style.opacity='0';
+      document.querySelector('.scroll-hint').style.opacity='0';
+      document.getElementById('nebula').style.transition='opacity 1s';
+      document.getElementById('nebula').style.opacity='0';
+    }, 300);
+
+    // Phase 3: Space station appears
+    setTimeout(()=>{
+      flame.style.opacity='0';
+      station.style.transition='opacity 0.8s';
+      station.style.opacity='1';
+      station.style.pointerEvents='auto';
+    }, 2000);
+
+    // Phase 4: Dock text
+    setTimeout(()=>{
+      dockText.style.transition='opacity 0.5s';
+      dockText.style.opacity='1';
+    }, 2600);
+
+    // Phase 5: Wipe to main site
+    setTimeout(()=>{
+      wipe.style.transition='transform 0.9s cubic-bezier(0.76,0,0.24,1)';
+      wipe.style.transform='translateY(0%)';
+    }, 3400);
+
+    // Phase 6: Navigate
+    setTimeout(()=>{
+      window.location.href='hub.html';
+    }, 4200);
+  }
+</script>
+</body>
+</html>
