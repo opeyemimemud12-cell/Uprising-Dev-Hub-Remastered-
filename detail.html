@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <!-- SEO + Social Preview -->
+  <meta name="description" content="Uprising DevHub — Discover, showcase and launch indie games from developers across the galaxy.">
+  <meta name="keywords" content="indie games, game showcase, game developer, upload games, indie dev hub">
+  <meta name="author" content="Uprising DevHub">
+  <meta name="theme-color" content="#00D4FF">
+
+  <!-- Open Graph (Facebook, WhatsApp, Discord, Google) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Uprising DevHub — Indie Game Universe">
+  <meta property="og:description" content="Discover, showcase and launch indie games from developers across the galaxy.">
+  <meta property="og:image" content="https://uprising-dev-hub-remastered.vercel.app/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://uprising-dev-hub-remastered.vercel.app">
+  <meta property="og:site_name" content="Uprising DevHub">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Uprising DevHub — Indie Game Universe">
+  <meta name="twitter:description" content="Discover, showcase and launch indie games from developers across the galaxy.">
+  <meta name="twitter:image" content="https://uprising-dev-hub-remastered.vercel.app/og-image.jpg">
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Game Details · Uprising DevHub</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="512x512" href="favicon-512.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+  <link rel="stylesheet" href="styles.css"/>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+</head>
+<body>
+
+<canvas id="spaceBattle"></canvas>
+
+<header class="site-header">
+  <nav class="nav">
+    <div class="logo"><a href="hub.html" style="all:inherit;cursor:pointer">Uprising DevHub</a></div>
+    <div class="nav-actions">
+      <div class="fb-status-bar">
+        <span class="fb-dot disconnected" id="fbStatusDot"></span>
+        <span class="fb-status-text" id="fbStatusText">Not Connected</span>
+      </div>
+      <div id="profileSection" class="profile-section hidden">
+        <div id="profileAvatar" class="profile-avatar" title="My Profile"></div>
+        <span id="profileEmail" class="profile-email"></span>
+        <button id="uploadGameBtn" class="btn small">Upload Game</button>
+        <button id="profileLogout" class="btn small transparent">Log out</button>
+      </div>
+      <div id="authSection" class="auth-section">
+        <button id="loginBtn" class="btn small transparent">Log in</button>
+        <button id="signupBtn" class="btn small">Sign up</button>
+      </div>
+      <button id="setFbBtn" class="btn small fb-btn">⚡ Firebase</button>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section id="gameDetail" class="detail-wrap"></section>
+</main>
+
+<!-- ══ FIREBASE MODAL ══ -->
+<div id="fbModal" class="modal hidden">
+  <div class="modal-panel fb-modal-panel">
+    <button id="closeFbModal" class="modal-close">✕</button>
+    <div class="fb-modal-header">
+      <div class="fb-modal-icon">⚡</div>
+      <h3>Connect Firebase</h3>
+      <p class="fb-modal-sub">Click Connect below to link your accounts, game uploads, and images to the cloud.</p>
+
+      <div class="form-actions" style="margin-top:18px">
+      <button id="fbConnectBtn" class="btn cta" style="flex:1">Connect &amp; Continue</button>
+      <button class="btn transparent" onclick="document.getElementById('fbModal').classList.add('hidden')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SUBMIT MODAL ══ -->
+<div id="modal" class="modal hidden">
+  <div class="modal-panel">
+    <button id="closeModal" class="modal-close">✕</button>
+    <h3>Submit a Game</h3>
+    <div class="warning-card"><strong>Warning:</strong> Ensure your download link is safe, working, and direct. Provide proof of the game before users download. Also provide game images on your link.</div>
+    <form id="submitForm">
+      <label>Game Title<input type="text" name="title" required autocomplete="off"></label>
+      <label>Genre<span class="genre-select-wrapper"><select name="genre" required class="genre-select"><option value="">Select genre</option></select></span></label>
+      <label>Description<textarea name="description" rows="3"></textarea></label>
+      <label>Download / Play Link<input type="url" name="link" placeholder="https://…"></label>
+      <label>Cover Image<input type="file" id="cardImage" accept="image/*" required></label>
+      <div class="upload-progress" id="uploadProgress" style="display:none">
+        <div class="upload-bar-wrap"><div class="upload-bar" id="uploadBar"></div></div>
+        <div class="upload-status-text" id="uploadStatusText">Preparing…</div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn cta">Submit Game</button>
+        <button type="button" id="cancelSubmit" class="btn transparent">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══ AUTH MODAL ══ -->
+<div id="authModal" class="modal hidden">
+  <div class="modal-panel" style="max-width:360px">
+    <button id="closeAuth" class="modal-close">✕</button>
+    <h3 id="authTitle">Log in</h3>
+    <form id="authForm">
+      <label>Email<input type="email" name="email" required autocomplete="email"></label>
+      <label>Password<input type="password" name="password" required autocomplete="current-password"></label>
+      <div class="form-actions"><button type="submit" class="btn cta" style="flex:1">Continue</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- ══ PROFILE MODAL ══ -->
+<div id="profileModal" class="modal hidden">
+  <div class="modal-panel" style="max-width:380px">
+    <button id="closeProfile" class="modal-close">✕</button>
+    <h3>My Profile</h3>
+    <form id="profileForm">
+      <label>Email<input type="email" id="profileFormEmail" disabled></label>
+      <label>Bio<textarea id="profileFormBio" rows="3" placeholder="Tell us about yourself…"></textarea></label>
+      <div class="form-actions">
+        <button type="submit" class="btn cta">Save Profile</button>
+        <button type="button" id="cancelProfile" class="btn transparent">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Same battle canvas script (lighter on detail page) -->
+<script>
+(function(){
+  const canvas = document.getElementById('spaceBattle');
+  const ctx    = canvas.getContext('2d');
+  let W, H;
+  function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+  window.addEventListener('resize',resize); resize();
+  const stars = Array.from({length:120},()=>({x:Math.random()*2000,y:Math.random()*2000,r:Math.random()*1.2+0.2,a:Math.random()*.5+.2,ts:Math.random()*.015+.004,tp:Math.random()*Math.PI*2}));
+  const particles=[];
+  function spawnP(x,y,color,n){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=Math.random()*2+.5;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:1,decay:Math.random()*.04+.02,r:Math.random()*2.5+1,color});}}
+  const lasers=[];
+  function fireLaser(x,y,vx,vy,color,fa){lasers.push({x,y,vx,vy,color,fa,life:1});}
+  const SDUR=480; let frame=0;
+  const alien={x:0,y:0,angle:0,health:1,ft:0};
+  const def={x:0,y:0,angle:0,health:1,ft:0};
+  function reset(){alien.health=def.health=1;alien.ft=def.ft=0;lasers.length=0;frame=0;}
+  function eio(t){return t<.5?2*t*t:-1+(4-2*t)*t;}
+  function lerp(a,b,t){return a+(b-a)*t;}
+  function update(f){
+    const ph=f%SDUR,cx=W/2,cy=H/2;
+    if(ph<80){const t=eio(ph/80);alien.x=lerp(-120,cx-100,t);alien.y=lerp(cy-80,cy-40,t);alien.angle=lerp(-.3,.1,t);def.x=lerp(W+120,cx+100,t);def.y=lerp(cy+80,cy+40,t);def.angle=lerp(Math.PI+.3,Math.PI-.1,t);}
+    else if(ph<200){const t=(ph-80)/120,ob=100+Math.sin(t*Math.PI)*20,a=t*Math.PI*1.5;alien.x=cx+Math.cos(a)*ob;alien.y=cy+Math.sin(a)*ob*.4-30;def.x=cx-Math.cos(a)*ob;def.y=cy-Math.sin(a)*ob*.4+30;alien.angle=Math.atan2(def.y-alien.y,def.x-alien.x);def.angle=Math.atan2(alien.y-def.y,alien.x-def.x);alien.ft++;def.ft++;if(alien.ft>35){alien.ft=0;fireLaser(alien.x,alien.y,Math.cos(alien.angle)*5,Math.sin(alien.angle)*5,'#00FF9A',true);}if(def.ft>40){def.ft=0;fireLaser(def.x,def.y,Math.cos(def.angle)*5,Math.sin(def.angle)*5,'#00C6FF',false);}}
+    else if(ph<320){const t=(ph-200)/120,a=t*Math.PI*3;alien.x=cx+Math.cos(a)*130;alien.y=cy+Math.sin(a*1.3)*60;def.x=cx-Math.cos(a+Math.PI*.7)*110;def.y=cy+Math.sin(a*.9+1)*50;alien.angle=Math.atan2(def.y-alien.y,def.x-alien.x);def.angle=Math.atan2(alien.y-def.y,alien.x-def.x);alien.ft++;def.ft++;if(alien.ft>18){alien.ft=0;fireLaser(alien.x,alien.y,Math.cos(alien.angle)*6,Math.sin(alien.angle)*6,'#00FF9A',true);}if(def.ft>22){def.ft=0;fireLaser(def.x,def.y,Math.cos(def.angle)*6,Math.sin(def.angle)*6,'#00C6FF',false);}def.health=Math.max(.15,1-t*.8);if(ph===200)spawnP(cx,cy,'#00C6FF',12);}
+    else if(ph<400){const t=eio((ph-320)/80);alien.x=lerp(cx,cx-60,t);alien.y=lerp(cy,cy-20,t);def.x=lerp(cx,W+140,t);def.y=lerp(cy+30,cy+80,t);if(ph===340)spawnP(def.x,def.y,'#FF6060',20);}
+    else{const t=(ph-400)/80,a=t*Math.PI*2;alien.x=cx+Math.cos(a)*50;alien.y=cy+Math.sin(a)*25;alien.angle=a+Math.PI/2;def.x=W+200;def.y=H+200;if(ph>=SDUR-1)reset();}
+  }
+  function drawAlien(cx,cy,sc,ang,hp){ctx.save();ctx.translate(cx,cy);ctx.rotate(ang);ctx.scale(sc,sc);const g=ctx.createRadialGradient(0,0,4,0,0,28);g.addColorStop(0,'rgba(0,255,160,.15)');g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,28,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.ellipse(0,2,20,7,0,0,Math.PI*2);ctx.fillStyle='#0A2A1A';ctx.fill();ctx.strokeStyle='#00FF9A';ctx.lineWidth=1.2;ctx.stroke();ctx.beginPath();ctx.ellipse(0,-1,10,6,0,Math.PI,0);ctx.fillStyle='#0D3D25';ctx.fill();ctx.strokeStyle='#00FF9A';ctx.lineWidth=1;ctx.stroke();ctx.beginPath();ctx.arc(0,-2,4,0,Math.PI*2);ctx.fillStyle='rgba(0,255,160,.3)';ctx.fill();[-14,-7,0,7,14].forEach((lx,i)=>{ctx.beginPath();ctx.arc(lx,4,1.5,0,Math.PI*2);ctx.fillStyle=i%2===0?'#00FF9A':'#00C6FF';ctx.fill();});if(hp<1){ctx.beginPath();ctx.rect(-20,-16,40,3);ctx.fillStyle='rgba(0,0,0,.5)';ctx.fill();ctx.beginPath();ctx.rect(-20,-16,40*hp,3);ctx.fillStyle=hp>.5?'#00FF9A':'#FF4444';ctx.fill();}ctx.restore();}
+  function drawDef(cx,cy,sc,ang,hp){ctx.save();ctx.translate(cx,cy);ctx.rotate(ang);ctx.scale(sc,sc);const g=ctx.createRadialGradient(0,0,4,0,0,26);g.addColorStop(0,'rgba(0,198,255,.12)');g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,26,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(0,-14);ctx.lineTo(6,-4);ctx.lineTo(8,8);ctx.lineTo(0,5);ctx.lineTo(-8,8);ctx.lineTo(-6,-4);ctx.closePath();ctx.fillStyle='#0A1A40';ctx.fill();ctx.strokeStyle='#00C6FF';ctx.lineWidth=1.2;ctx.stroke();ctx.beginPath();ctx.moveTo(6,-2);ctx.lineTo(18,6);ctx.lineTo(14,10);ctx.lineTo(8,8);ctx.closePath();ctx.fillStyle='#0D2550';ctx.fill();ctx.strokeStyle='#00C6FF';ctx.lineWidth=1;ctx.stroke();ctx.beginPath();ctx.moveTo(-6,-2);ctx.lineTo(-18,6);ctx.lineTo(-14,10);ctx.lineTo(-8,8);ctx.closePath();ctx.fillStyle='#0D2550';ctx.fill();ctx.strokeStyle='#00C6FF';ctx.lineWidth=1;ctx.stroke();ctx.beginPath();ctx.ellipse(0,-5,4,6,0,0,Math.PI*2);ctx.fillStyle='rgba(0,198,255,.25)';ctx.fill();ctx.strokeStyle='#00C6FF';ctx.lineWidth=.8;ctx.stroke();ctx.beginPath();ctx.ellipse(0,9,3,2,0,0,Math.PI*2);ctx.fillStyle='rgba(0,198,255,.4)';ctx.fill();if(hp<1){ctx.beginPath();ctx.rect(-20,-22,40,3);ctx.fillStyle='rgba(0,0,0,.5)';ctx.fill();ctx.beginPath();ctx.rect(-20,-22,40*hp,3);ctx.fillStyle=hp>.5?'#00C6FF':'#FF4444';ctx.fill();}ctx.restore();}
+  function drawLaser(l){const g=ctx.createLinearGradient(l.x,l.y,l.x-l.vx*8,l.y-l.vy*8);g.addColorStop(0,l.color);g.addColorStop(1,'transparent');ctx.beginPath();ctx.moveTo(l.x,l.y);ctx.lineTo(l.x-l.vx*8,l.y-l.vy*8);ctx.strokeStyle=g;ctx.lineWidth=2.5;ctx.shadowColor=l.color;ctx.shadowBlur=8;ctx.stroke();ctx.shadowBlur=0;}
+  let t=0;
+  function draw(ts){requestAnimationFrame(draw);t=ts/1000;ctx.clearRect(0,0,W,H);
+    stars.forEach(s=>{const al=s.a+Math.sin(t*s.ts*60+s.tp)*.3;ctx.beginPath();ctx.arc(s.x%W,s.y%H,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${Math.max(0,Math.min(1,al))})`;ctx.fill();});
+    update(frame++);
+    for(let i=lasers.length-1;i>=0;i--){const l=lasers[i];l.x+=l.vx;l.y+=l.vy;l.life-=.012;const tx=l.fa?def.x:alien.x,ty=l.fa?def.y:alien.y;if(Math.hypot(l.x-tx,l.y-ty)<22){spawnP(l.x,l.y,l.color,8);if(l.fa)def.health=Math.max(.1,def.health-.05);else alien.health=Math.max(.1,alien.health-.03);lasers.splice(i,1);continue;}if(l.life<=0||l.x<-50||l.x>W+50||l.y<-50||l.y>H+50){lasers.splice(i,1);continue;}drawLaser(l);}
+    for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.x+=p.vx;p.y+=p.vy;p.vy+=.02;p.life-=p.decay;if(p.life<=0){particles.splice(i,1);continue;}ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.life,0,Math.PI*2);ctx.fillStyle=p.color+Math.floor(p.life*255).toString(16).padStart(2,'0');ctx.fill();}
+    if(alien.x>-60&&alien.x<W+60&&alien.y>-60&&alien.y<H+60)drawAlien(alien.x,alien.y,1.4,alien.angle,alien.health);
+    if(def.x>-60&&def.x<W+60&&def.y>-60&&def.y<H+60)drawDef(def.x,def.y,1.3,def.angle,def.health);
+  }
+  draw(0);
+})();
+</script>
+
+<script src="script.js"></script>
+</div>
+</body>
+</html>
